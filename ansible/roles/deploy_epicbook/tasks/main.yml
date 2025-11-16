@@ -1,0 +1,24 @@
+- name: Clone repository
+  git:
+    repo: 'https://github.com/omiete01/theepicbook.git'
+    dest: /home/ubuntu/theepicbook
+    version: main
+    force: yes
+    # accept_hostkey: yes
+    update: yes
+
+- name: Install Node.js Dependencies
+  community.general.npm: 
+    path: /home/ubuntu/theepicbook
+    state: present
+
+- name: Install other dependencies
+  command: npm install mysql
+  args:
+    chdir: /home/ubuntu/theepicbook
+
+- name: Update configuration file for theepicbook app
+  template:
+    src: config.json.j2
+    dest: /home/ubuntu/theepicbook/config/config.json
+    mode: '0644'
