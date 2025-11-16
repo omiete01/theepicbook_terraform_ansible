@@ -58,9 +58,7 @@ You must provide an SSH public key for secure EC2 access.
 
 ### Option B: Generate a new key (Linux/macOS)
 ```bash
-ssh-keygen -t rsa -b 2048 -f ~/.ssh/epicbook-key -N ""
-# Public key: ~/.ssh/epicbook-key.pub
-# Private key: ~/.ssh/epicbook-key (KEEP SECURE!)
+ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ""
 ```
 
 ## ⚙️ Terraform Configuration
@@ -139,8 +137,7 @@ Go into the ansible directory
 cd ../ansible
 ```
 
-Update group_vars/web.yml with the rds_endpoint output from terraform
-Also update the password used in terraform.tfvars
+Update group_vars/web.yml with the rds_endpoint output from terraform. Also update the password used in terraform.tfvars
 
 ```bash
 db_host: <rds_endpoint>
@@ -160,7 +157,7 @@ Run the below command on the command-line to configure theepicbook application:
 ansible-playbook -i inventory.ini site.yml
 ```
 
-You should get the something like the below result if ran successfully:
+You should get something like the below result if ran successfully:
 
 ![alt text](<Screenshot 2025-11-16 165743.png>)
 
@@ -198,7 +195,7 @@ terraform destroy
 - ✅ SSH key authentication (no passwords)
 - ✅ No hardcoded credentials in code (use `tfvars` or env vars)
 - ✅ DB subnet group meets AWS high-availability requirements
-- ✅ Idenpotency and database management
+- ✅ Idempotency and database management
 - ✅ Ansible configuration and organization
 ---
 
