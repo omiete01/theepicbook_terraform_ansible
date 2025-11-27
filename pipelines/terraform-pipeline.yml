@@ -1,7 +1,7 @@
 trigger:
   paths:
     include:
-      - terraform/**
+      - azure_epicbook/terraform/**
   branches:
     include:
       - main
@@ -29,10 +29,10 @@ stages:
         cp $(download_ssh_key.secureFilePath) ~/.ssh/id_rsa.pub
 
         # Now copy into Terraform path
-        cp $(download_ssh_key.secureFilePath) ../azure_epicbook/terraform/id_rsa.pub
+        cp $(download_ssh_key.secureFilePath) terraform/id_rsa.pub
 
         echo "Listing contents of terraform/"
-        ls -al ../azure_epicbook/terraform/
+        ls -al terraform/
       displayName: 'Extract SSH Public Key for Terraform'
 
     - task: AzureCLI@2
