@@ -16,7 +16,7 @@ All resources are deployed in the us-east-1 region (configurable).
 ## 📁 Project Structure
 
 ```bash
-theepicbook_terraform_ansible/
+theepicbook_terraform_ansible/aws_epicbook/
 ├── ansible/
    ├── group_vars/
       ├── web_yml          # role-wide variables
