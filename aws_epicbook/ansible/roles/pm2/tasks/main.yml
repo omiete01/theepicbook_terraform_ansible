@@ -1,0 +1,12 @@
+- name: Start the application with PM2
+  shell: pm2 start server.js --name theepicbook -f --watch
+  args:
+    chdir: /home/ubuntu/theepicbook
+  register: pm2_start_result
+
+- name: Save PM2 process list for persistence
+  shell: pm2 save
+  args:
+    chdir: /home/ubuntu/theepicbook
+  register: pm2_save_result
+

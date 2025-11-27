@@ -1,0 +1,15 @@
+
+db_host: "terraform-20251127144234465100000004.cov4ymamsops.us-east-1.rds.amazonaws.com"
+db_user: "db_admin"
+db_password: "MySecurePassword123!"
+sql_src: "./theepicbook/db"
+db_name: "bookstore"
+
+app_port: 8080
+vm_user: "ubuntu"
+
+sql_files_to_run:
+  - "BuyTheBook_Schema.sql"
+  - "books_seed.sql"
+  - "author_seed.sql"
+

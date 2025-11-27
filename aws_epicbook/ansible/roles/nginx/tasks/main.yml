@@ -1,0 +1,25 @@
+- name: Ensure NGINX is started and enabled
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Create NGINX configuration file for theepicbook app
+  template:
+    src: theepicbooks.conf.j2
+    dest: /etc/nginx/conf.d/theepicbooks.conf
+    mode: '0644'
+
+- name: Remove default NGINX configuration file
+  shell:
+    cmd: rm -f /etc/nginx/sites-enabled/*
+
+- name: Restart NGINX
+  service:
+    name: nginx
+    state: restarted
+
+# - name: Start server.js
+#   shell:
+#     cmd: nohup node server.js > app.log 2>&1 &
+#     chdir: /home/ubuntu/theepicbook

@@ -1,0 +1,56 @@
+- name: Ensure Python MySQL client is installed (for Python 3)
+  ansible.builtin.apt:
+    name:
+      - python3-pymysql
+      - python3-mysqldb
+    state: present
+  become: true
+
+- name: Create .env file
+  copy:
+    dest: /home/ubuntu/theepicbook/.env
+    content: |
+      DB_HOST="{{ db_host }}"
+      DB_USER={{ db_user }}
+      DB_PASSWORD={{ db_password }}
+      DB_NAME={{ db_name }}
+      DB_PORT=3306
+    mode: '0600'
+    owner: ubuntu
+    group: ubuntu
+
+
+- name: Ensure the database exists
+  community.mysql.mysql_db:
+    login_host: "{{ db_host }}"
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+    name: "{{ db_name }}"
+    state: present
+
+
+- name: Create new database with name 'bookstore' 
+  community.mysql.mysql_db:
+    login_host: "{{ db_host }}"
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+    name:
+      - bookstore
+    state: present
+
+- name: Ensure db directory exists
+  ansible.builtin.file:
+    path: "{{ sql_src }}"
+    state: directory 
+    mode: '0755'
+
+- name: Run SQL script for each file in the list
+  community.mysql.mysql_db:
+    name: "{{ db_name }}"
+    state: import
+    # Constructs the full file path on the remote node
+    target: "{{ sql_src }}/{{ item }}"
+    login_host: "{{ db_host }}" 
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+  loop: "{{ sql_files_to_run }}"

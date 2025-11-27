@@ -1,0 +1,11 @@
+- name: Apply Common System Updates
+  hosts: web
+  become: yes
+  roles:
+    - common
+    - deploy_epicbook
+    - db
+    - nginx
+    - pm2
+
+# command to run on terminal: ansible-galaxy init roles/common    
