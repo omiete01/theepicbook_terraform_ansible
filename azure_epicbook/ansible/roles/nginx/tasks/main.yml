@@ -1,8 +1,8 @@
-- name: Install NGINX
-  apt:
-    name: nginx
-    state: present
-    update_cache: yes
+# - name: Install NGINX
+#   apt:
+#     name: nginx
+#     state: present
+#     update_cache: yes
 
 - name: Ensure NGINX is started and enabled
   service:

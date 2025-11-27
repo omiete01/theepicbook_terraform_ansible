@@ -1,0 +1,44 @@
+- name: Ensure Python MySQL client is installed (for Python 3)
+  ansible.builtin.apt:
+    name:
+      - python3-pymysql
+      - python3-mysqldb
+    state: present
+  become: true
+
+- name: Create .env file
+  copy:
+    dest: "/home/{{ vm_user }}/theepicbook/.env"
+    content: |
+      DB_HOST={{ db_host }}
+      DB_USER={{ db_user }}
+      DB_PASSWORD={{ db_password }}
+      DB_NAME={{ db_name }}
+      PORT={{ app_port }}
+      DB_PORT=3306
+    mode: '0600'
+    owner: "{{ vm_user }}"
+    group: "{{ vm_user }}"
+
+- name: Create new database with name 'bookstore' 
+  shell: |
+    mysql -h {{ db_host }} -u {{ db_user }} -p{{ db_password }} -e "CREATE DATABASE IF NOT EXISTS {{ db_name }};"
+  args:
+    executable: /bin/bash
+  environment:
+    MYSQL_PWD: "{{ db_password }}"
+
+- name: Ensure db directory exists
+  ansible.builtin.file:
+    path: "{{ sql_src }}"
+    state: directory 
+    mode: '0755'
+
+- name: Run SQL script for each file in the list
+  shell: |
+    mysql -h {{ db_host }} -u {{ db_user }} -p{{ db_password }} --ssl-mode=REQUIRED < db/BuyTheBook_Schema.sql
+    mysql -h {{ db_host }} -u {{ db_user }} -p{{ db_password }} --ssl-mode=REQUIRED < db/books_seed.sql
+    mysql -h {{ db_host }} -u {{ db_user }} -p{{ db_password }} --ssl-mode=REQUIRED < db/author_seed.sql
+  args:
+    chdir: /home/{{ vm_user }}/theepicbook
+

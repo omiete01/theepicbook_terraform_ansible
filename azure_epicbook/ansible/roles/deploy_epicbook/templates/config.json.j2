@@ -4,6 +4,11 @@
     "password": "{{ db_password }}",
     "database": "{{ db_name }}",
     "host": "{{ db_host }}",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "dialectOptions": {
+      "ssl": { 
+        "rejectUnauthorized": false 
+      }
+    }
   }
 }

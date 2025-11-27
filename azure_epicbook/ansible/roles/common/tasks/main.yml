@@ -1,0 +1,30 @@
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Upgrade all packages to the latest version
+  apt:
+    upgrade: dist
+
+- name: Install essential packages
+  apt:
+    name: 
+      - git
+      - curl
+      - nginx
+      - mysql-client
+    state: present
+
+- name: Install Node.js
+  shell: |
+    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+  args:
+    executable: /bin/bash
+
+- name: Install PM2
+  npm:
+    name: pm2
+    global: yes
+    state: present
+

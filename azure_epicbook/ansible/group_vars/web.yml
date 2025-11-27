@@ -1,0 +1,15 @@
+
+db_host: "epicbook-mysql.mysql.database.azure.com"
+db_user: "mysqladmin"
+db_password: "Password!23"
+sql_src: "./theepicbook/db"
+db_name: "bookstore"
+vm_user: "azureuser"
+
+app_port: 8080
+
+sql_files_to_run:
+  - "BuyTheBook_Schema.sql"
+  - "books_seed.sql"
+  - "author_seed.sql"
+

@@ -1,5 +1,10 @@
-terraform/.terraform/
-terraform/*.tfstate
-terraform/*.tfstate.backup    
-terraform/.terraform.lock.hcl
-terraform/terraform.tfs*
+azure_epicbook/terraform/.terraform/
+azure_epicbook/terraform/*.tfstate
+azure_epicbook/terraform/*.tfstate.backup    
+azure_epicbook/terraform/.terraform.lock.hcl
+azure_epicbook/terraform/terraform.tfs*
+aws_epicbook/terraform/.terraform/
+aws_epicbook/terraform/*.tfstate
+aws_epicbook/terraform/*.tfstate.backup    
+aws_epicbook/terraform/.terraform.lock.hcl
+aws_epicbook/terraform/terraform.tfs*
