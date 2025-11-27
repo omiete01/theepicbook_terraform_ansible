@@ -29,10 +29,10 @@ stages:
         cp $(download_ssh_key.secureFilePath) ~/.ssh/id_rsa.pub
 
         # Now copy into Terraform path
-        cp $(download_ssh_key.secureFilePath) terraform/id_rsa.pub
+        cp $(download_ssh_key.secureFilePath) ../azure_epicbook/terraform/id_rsa.pub
 
         echo "Listing contents of terraform/"
-        ls -al terraform/
+        ls -al ../azure_epicbook/terraform/
       displayName: 'Extract SSH Public Key for Terraform'
 
     - task: AzureCLI@2
@@ -40,10 +40,9 @@ stages:
         azureSubscription: 'it-azure-connection'
         scriptType: bash
         scriptLocation: inlineScript
-        workingDirectory: $(System.DefaultWorkingDirectory)/terraform
+        workingDirectory: $(System.DefaultWorkingDirectory)azure_epicbook/terraform/
         inlineScript: |
           echo "##[group]Terraform Init/Plan/Apply"
-          cd terraform
           terraform init -input=false 
           terraform plan -input=false -var-file="terraform.tfvars"
           terraform apply -input=false -auto-approve -var-file="terraform.tfvars"
