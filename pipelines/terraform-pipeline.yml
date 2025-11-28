@@ -38,7 +38,7 @@ stages:
     - task: AzureCLI@2
       displayName: 'Terraform Init, Plan and Apply'
       inputs:
-        azureSubscription: 'it-service-connection'
+        azureSubscription: 'new-service-connection'
         scriptType: bash
         scriptLocation: inlineScript
         workingDirectory: $(System.DefaultWorkingDirectory)/azure_epicbook/terraform/
