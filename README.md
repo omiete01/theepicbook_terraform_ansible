@@ -199,3 +199,5 @@ terraform destroy
 - ✅ Ansible configuration and organization
 ---
 
+## Update
+Read this **[article](https://omiete-projects.hashnode.dev/capstone-project-automated-epicbook-application-with-dual-pipelines-in-azure-devops-terraform-and-ansible?showSharer=true)** to see how I deployed the same application on Azure using Azure DevOps.
