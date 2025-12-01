@@ -133,6 +133,7 @@ stages:
         workingDirectory: $(System.DefaultWorkingDirectory)/azure_epicbook/terraform/
         inlineScript: |
           echo "##[group]Terraform Init/Plan/Apply"
+          cd terraform
           terraform init -input=false 
           terraform plan -input=false -var-file="terraform.tfvars"
           terraform apply -input=false -auto-approve -var-file="terraform.tfvars"
