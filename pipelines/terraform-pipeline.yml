@@ -1,92 +1,3 @@
-trigger:
-  paths:
-    include:
-      - azure_epicbook/terraform/**
-  branches:
-    include:
-      - main
-
-stages:
-- stage: Terraform
-  displayName: 'Provision Infrastructure'
-  jobs:
-  - job: Terraform_Apply
-    displayName: 'Terraform Apply'
-    pool:
-      name: 'self-hosted-agent-pool'
-    steps:
-
-    - script: |
-        # Install Terraform
-        wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-        echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-        sudo apt update && sudo apt install terraform -y
-        
-        # Verify installation
-        terraform version
-      displayName: 'Install Terraform'
-
-    - task: DownloadSecureFile@1
-      name: download_ssh_key
-      inputs:
-        secureFile: 'id_rsa'
-
-    - script: |
-        mkdir -p ~/.ssh
-        cp $(download_ssh_key.secureFilePath) ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        echo "SSH key copied and permissions set"
-      displayName: 'Setup SSH Private Key'
-
-    - task: AzureCLI@2
-      displayName: 'Terraform Init'
-      inputs:
-        azureSubscription: 'new-service-connection'
-        scriptType: bash
-        scriptLocation: inlineScript
-        workingDirectory: '$(System.DefaultWorkingDirectory)/azure_epicbook/terraform'
-        inlineScript: |
-          echo "##[group]Terraform Init"
-          terraform init -input=false
-          echo "##[endgroup]"
-
-    - task: AzureCLI@2
-      displayName: 'Terraform Plan'
-      inputs:
-        azureSubscription: 'new-service-connection'
-        scriptType: bash
-        scriptLocation: inlineScript
-        workingDirectory: '$(System.DefaultWorkingDirectory)/azure_epicbook/terraform'
-        inlineScript: |
-          echo "##[group]Terraform Plan"
-          terraform plan -input=false -var-file="terraform.tfvars"
-          echo "##[endgroup]"
-
-    - task: AzureCLI@2
-      displayName: 'Terraform Apply'
-      inputs:
-        azureSubscription: 'new-service-connection'
-        scriptType: bash
-        scriptLocation: inlineScript
-        workingDirectory: '$(System.DefaultWorkingDirectory)/azure_epicbook/terraform'
-        inlineScript: |
-          echo "##[group]Terraform Apply"
-          terraform apply -input=false -auto-approve -var-file="terraform.tfvars"
-          echo "##[endgroup]"
-
-    - task: AzureCLI@2
-      displayName: 'Terraform Output'
-      inputs:
-        azureSubscription: 'new-service-connection'
-        scriptType: bash
-        scriptLocation: inlineScript
-        workingDirectory: '$(System.DefaultWorkingDirectory)/azure_epicbook/terraform'
-        inlineScript: |
-          echo "##[group]Terraform Output"
-          terraform output
-          echo "##[endgroup]"
-
-
 # trigger:
 #   paths:
 #     include:
@@ -96,7 +7,6 @@ stages:
 #       - main
 
 # stages:
-
 # - stage: Terraform
 #   displayName: 'Provision Infrastructure'
 #   jobs:
@@ -106,34 +16,124 @@ stages:
 #       name: 'self-hosted-agent-pool'
 #     steps:
 
+#     - script: |
+#         # Install Terraform
+#         wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+#         echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+#         sudo apt update && sudo apt install terraform -y
+        
+#         # Verify installation
+#         terraform version
+#       displayName: 'Install Terraform'
+
 #     - task: DownloadSecureFile@1
 #       name: download_ssh_key
 #       inputs:
-#         secureFile: 'id_rsa.pub'
+#         secureFile: 'id_rsa'
 
 #     - script: |
-#         echo "Copying SSH public key into Terraform module"
-
 #         mkdir -p ~/.ssh
-#         cp $(download_ssh_key.secureFilePath) ~/.ssh/id_rsa.pub
-
-#         # Now copy into Terraform path
-#         # cp $(download_ssh_key.secureFilePath) terraform/id_rsa.pub
-
-#         # echo "Listing contents of terraform/"
-#         # ls -al terraform/
-#       displayName: 'Extract SSH Public Key for Terraform'
+#         cp $(download_ssh_key.secureFilePath) ~/.ssh/id_rsa
+#         chmod 600 ~/.ssh/id_rsa
+#         echo "SSH key copied and permissions set"
+#       displayName: 'Setup SSH Private Key'
 
 #     - task: AzureCLI@2
-#       displayName: 'Terraform Init, Plan and Apply'
+#       displayName: 'Terraform Init'
 #       inputs:
 #         azureSubscription: 'new-service-connection'
 #         scriptType: bash
 #         scriptLocation: inlineScript
-#         workingDirectory: $(System.DefaultWorkingDirectory)/azure_epicbook/terraform/
+#         workingDirectory: '$(System.DefaultWorkingDirectory)/azure_epicbook/terraform'
 #         inlineScript: |
-#           echo "##[group]Terraform Init/Plan/Apply"
-#           terraform init -input=false 
+#           echo "##[group]Terraform Init"
+#           terraform init -input=false
+#           echo "##[endgroup]"
+
+#     - task: AzureCLI@2
+#       displayName: 'Terraform Plan'
+#       inputs:
+#         azureSubscription: 'new-service-connection'
+#         scriptType: bash
+#         scriptLocation: inlineScript
+#         workingDirectory: '$(System.DefaultWorkingDirectory)/azure_epicbook/terraform'
+#         inlineScript: |
+#           echo "##[group]Terraform Plan"
 #           terraform plan -input=false -var-file="terraform.tfvars"
+#           echo "##[endgroup]"
+
+#     - task: AzureCLI@2
+#       displayName: 'Terraform Apply'
+#       inputs:
+#         azureSubscription: 'new-service-connection'
+#         scriptType: bash
+#         scriptLocation: inlineScript
+#         workingDirectory: '$(System.DefaultWorkingDirectory)/azure_epicbook/terraform'
+#         inlineScript: |
+#           echo "##[group]Terraform Apply"
 #           terraform apply -input=false -auto-approve -var-file="terraform.tfvars"
 #           echo "##[endgroup]"
+
+#     - task: AzureCLI@2
+#       displayName: 'Terraform Output'
+#       inputs:
+#         azureSubscription: 'new-service-connection'
+#         scriptType: bash
+#         scriptLocation: inlineScript
+#         workingDirectory: '$(System.DefaultWorkingDirectory)/azure_epicbook/terraform'
+#         inlineScript: |
+#           echo "##[group]Terraform Output"
+#           terraform output
+#           echo "##[endgroup]"
+
+
+trigger:
+  paths:
+    include:
+      - azure_epicbook/terraform/**
+  branches:
+    include:
+      - main
+
+stages:
+
+- stage: Terraform
+  displayName: 'Provision Infrastructure'
+  jobs:
+  - job: Terraform_Apply
+    displayName: 'Terraform Apply'
+    pool:
+      name: 'self-hosted-agent-pool'
+    steps:
+
+    - task: DownloadSecureFile@1
+      name: download_ssh_key
+      inputs:
+        secureFile: 'id_rsa.pub'
+
+    - script: |
+        echo "Copying SSH public key into Terraform module"
+
+        mkdir -p ~/.ssh
+        cp $(download_ssh_key.secureFilePath) ~/.ssh/id_rsa.pub
+
+        # Now copy into Terraform path
+        # cp $(download_ssh_key.secureFilePath) terraform/id_rsa.pub
+
+        # echo "Listing contents of terraform/"
+        # ls -al terraform/
+      displayName: 'Extract SSH Public Key for Terraform'
+
+    - task: AzureCLI@2
+      displayName: 'Terraform Init, Plan and Apply'
+      inputs:
+        azureSubscription: 'it-service-connection'
+        scriptType: bash
+        scriptLocation: inlineScript
+        workingDirectory: $(System.DefaultWorkingDirectory)/azure_epicbook/terraform/
+        inlineScript: |
+          echo "##[group]Terraform Init/Plan/Apply"
+          terraform init -input=false 
+          terraform plan -input=false -var-file="terraform.tfvars"
+          terraform apply -input=false -auto-approve -var-file="terraform.tfvars"
+          echo "##[endgroup]"
