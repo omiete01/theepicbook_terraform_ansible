@@ -37,11 +37,9 @@ stages:
 
           # - task: CmdLine@2
 
-
-          - script: 
-            workingDirectory: azure_epicbook/
-              cd ansible
+          - script: |
               ansible-playbook -i inventory.ini site.yml --ssh-extra-args "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
             displayName: "Run Ansible Playbook"
+            workingDirectory: $(System.DefaultWorkingDirectory)/azure_epicbook/ansible
             env:
               ANSIBLE_HOST_KEY_CHECKING: "False"
