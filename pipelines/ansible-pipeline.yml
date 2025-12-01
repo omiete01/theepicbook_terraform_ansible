@@ -18,10 +18,10 @@ stages:
           name: "self-hosted-agent-pool"
 
         steps:
-          # - script: |
-          #     sudo apt update
-          #     sudo apt install -y ansible sshpass
-          #   displayName: "Install Ansible & SSH dependencies"
+          - script: |
+              sudo apt update
+              sudo apt install -y ansible sshpass
+            displayName: "Install Ansible & SSH dependencies"
 
           - task: DownloadSecureFile@1
             name: download_ssh_key
