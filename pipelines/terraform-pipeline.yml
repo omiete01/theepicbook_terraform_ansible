@@ -132,8 +132,18 @@ stages:
         scriptLocation: inlineScript
         workingDirectory: $(System.DefaultWorkingDirectory)/azure_epicbook/terraform/
         inlineScript: |
+
+          echo "##[group]Export Service Principal credentials"
+          export ARM_CLIENT_ID=$servicePrincipalId
+          export ARM_CLIENT_SECRET=$servicePrincipalKey
+          export ARM_SUBSCRIPTION_ID=$subscriptionId
+          export ARM_TENANT_ID=$tenantId
+          echo "ARM_CLIENT_ID=$ARM_CLIENT_ID"
+          echo "ARM_SUBSCRIPTION_ID=$ARM_SUBSCRIPTION_ID"
+          echo "##[endgroup]"
+
           echo "##[group]Terraform Init/Plan/Apply"
-          cd terraform
+          # cd terraform
           terraform init -input=false 
           terraform plan -input=false -var-file="terraform.tfvars"
           terraform apply -input=false -auto-approve -var-file="terraform.tfvars"
