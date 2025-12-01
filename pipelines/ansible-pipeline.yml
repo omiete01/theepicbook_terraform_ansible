@@ -35,7 +35,11 @@ stages:
               echo "StrictHostKeyChecking no" > ~/.ssh/config
             displayName: "Setup SSH Private Key"
 
+          # - task: CmdLine@2
+
+
           - script: |
+            workingDirectory: $(System.DefaultWorkingDirectory)/azure_epicbook/
               cd ansible
               ansible-playbook -i inventory.ini site.yml --ssh-extra-args "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
             displayName: "Run Ansible Playbook"
